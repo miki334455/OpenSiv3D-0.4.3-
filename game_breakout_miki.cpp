@@ -3,10 +3,18 @@
 enum {
     BLOCK_Y = 5,
     BLOCK_X = 20,
+    ALLOW_DEATS = 5,
 };
 
 void Main()
 {
+   //死んだ回数 
+    int descount = 0;
+
+   //ボールが生きてるか状態
+    bool ballstatus = true;
+
+    
     // ブロックのサイズ
     constexpr Size blockSize(40, 20);
 
@@ -81,6 +89,19 @@ void Main()
             ballVelocity = Vec2((ball.x - paddle.center().x) * 10, -ballVelocity.y).setLength(speed);
         }
 
+        //ボールの復活判定…ボールがシーンの高さ600から下に動いた時に次のボールを出す処理
+        if (Scene::Height() < ball.bottom().y) {
+            if(ballstatus == true){
+                 descount++;
+            }
+            ballstatus = false;
+            if (KeyEnter.down() && descount < ALLOW_DEATS) {
+                ball.setCenter(Cursor::Pos().x, 400);
+                ballstatus = true;
+            }   
+        }
+        
+
         // すべてのブロックを描画する
         for (const auto& block : blocks)
         {
@@ -93,4 +114,5 @@ void Main()
         // パドルを描く
         paddle.draw();
     }
+    
 }
