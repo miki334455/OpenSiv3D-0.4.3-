@@ -103,7 +103,7 @@ void Main()
         
         //ボールの復活判定…ボールがシーンの高さ600から下に動いた時に次のボールを出す処理
         if (Scene::Height() < ball.bottom().y) {
-            if(ballstatus == true){
+            if(ballstatus == true){                     //生きてる状態から死んだ状態の場合の処理
                  descount++;
             }
             ballstatus = false;
@@ -119,7 +119,7 @@ void Main()
             }
 
 
-            if (KeyEnter.down() && descount < ALLOW_DEATS) {
+            if (KeyEnter.down() && descount < ALLOW_DEATS) {  //死んでるがライフが残ってる場合の処理(elseの処理は5回死んでしまったのでボールを表示しない。)
                 ball.setCenter(Cursor::Pos().x, 400);
                 ballstatus = true;
             }
