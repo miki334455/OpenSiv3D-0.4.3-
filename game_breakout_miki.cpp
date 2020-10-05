@@ -45,6 +45,12 @@ void Main()
     // ボール
     Circle ball(400, 400, 8);
 
+    //ライフ数の表示の文字サイズ
+    const Font fontLife(30);
+
+    //ボールが死んだときに表示するコメントの文字サイズ
+    const Font fontDie(40);
+
     while (System::Update())
     {
         // パドル
@@ -89,18 +95,36 @@ void Main()
             ballVelocity = Vec2((ball.x - paddle.center().x) * 10, -ballVelocity.y).setLength(speed);
         }
 
+        
+        //ライフ数の表示
+        for (int i = 0; i < ALLOW_DEATS - descount; i++) {
+            fontLife(U"💛").draw(750 - (i * 50), 5,Palette::Red);  
+        }
+        
         //ボールの復活判定…ボールがシーンの高さ600から下に動いた時に次のボールを出す処理
         if (Scene::Height() < ball.bottom().y) {
             if(ballstatus == true){
                  descount++;
             }
             ballstatus = false;
+            
+            if (descount < ALLOW_DEATS) {
+                ClearPrint();
+                fontDie(U"Enterキーで復活します。").drawAt(Scene::Center(), Palette::White);
+            }
+
+            if (descount == ALLOW_DEATS) {
+                ClearPrint();
+                fontDie(U"ゲームオーバー").drawAt(Scene::Center(), Palette::Yellow);
+            }
+
+
             if (KeyEnter.down() && descount < ALLOW_DEATS) {
                 ball.setCenter(Cursor::Pos().x, 400);
                 ballstatus = true;
-            }   
+            }
+           
         }
-        
 
         // すべてのブロックを描画する
         for (const auto& block : blocks)
